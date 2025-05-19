@@ -4,12 +4,12 @@ A Node.js Express API that allows users to subscribe to weather updates for a sp
 
 ---
 
-## Setup
+## 🛠️ Setup
 
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/eom2204/weather-subscription-app.git
 cd weather-app
 ```
 
@@ -25,11 +25,8 @@ Create a `.env` file in the project root with the following:
 
 ```env
 API_URL='http://localhost:3000'
-
 PORT=3000
-
 MONGO_URI=mongodb://localhost:27017/weather
-
 WEATHER_API_KEY=26724267e3834a9ab09175439251805
 
 SMTP_HOST=mailhog
@@ -47,29 +44,22 @@ EMAIL_FROM=noreply@weatherapi.app
    docker-compose up --build
    ```
 
-2. **View logs**:
-    - API: `docker-compose logs app`
-    - Scheduler: `docker-compose logs scheduler`
-    - MongoDB: `docker-compose logs mongo`
-    - MailHog: `docker-compose logs mailhog`
-
-3. **Access services**:
+2. **Access services**:
     - API: `http://localhost:3000`
     - Swagger UI: `http://localhost:3000/api-docs`
     - MailHog UI: `http://localhost:8025`
     - MongoDB: `mongodb://localhost:27017/weather`
 
-4. **Stop services**:
+3. **Stop services**:
    ```bash
    docker-compose down
    ```
 
-**Note**: Local files sync with containers via the `.:/app` volume mapping. Changes to `src/` files are reflected after restarting services (`docker-compose restart app scheduler`) or rebuilding (`docker-compose up --build`).
 
 ## 🧪 What to Test:
 
 ### ✅ Subscribe to Weather Updates
-- Open [http://localhost:3000](http://localhost:3000)
+- Open [http://localhost:3000](http://localhost:3000) - html-page for subscription
 - Input valid:
     - `email`
     - `city`
@@ -98,7 +88,7 @@ EMAIL_FROM=noreply@weatherapi.app
 
 
 
-## Features
+## 🧩 Features
 
 - **Subscription Management**:
   - Subscribe via POST `/api/subscribe` with email, city, and frequency (`hourly` or `daily`).
@@ -127,7 +117,7 @@ EMAIL_FROM=noreply@weatherapi.app
     - `mailhog`
   - Local files sync with containers via volume mapping.
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```
 weather-subscription-api/
@@ -159,16 +149,7 @@ weather-subscription-api/
 └── README.md              # Project documentation
 ```
 
-## Prerequisites
-
-- **Node.js**: v22.0.0 or higher
-- **Docker**: For containerized deployment
-- **Docker Compose**: For managing multi-container setup
-- **WeatherAPI.com API Key**: Obtain from [WeatherAPI.com](https://www.weatherapi.com/)
-
-
-
-## API Endpoints
+## 🔗 API Endpoints
 
 See `swagger/swagger.json` or `http://localhost:3000/api-docs` for full details. Key endpoints:
 
@@ -177,7 +158,7 @@ See `swagger/swagger.json` or `http://localhost:3000/api-docs` for full details.
 - **GET /api/confirm/:token**: Confirm a subscription.
 - **GET /api/unsubscribe/:token**: Unsubscribe from updates.
 
-## Scheduler
+## 🕒 Scheduler
 
 The `scheduler` service (`src/scheduler.ts`) runs cron jobs to send weather updates:
 - **Hourly**: Every hour (`0 * * * *`) for `frequency: hourly` subscribers.
@@ -185,7 +166,7 @@ The `scheduler` service (`src/scheduler.ts`) runs cron jobs to send weather upda
 
 Updates are sent only to `confirmed: true` subscribers, using WeatherAPI.com data and MailHog for emails.
 
-## Development Notes
+## 🧱 Development Notes
 
 - **File Syncing**: Local changes to `src/` files sync to Docker containers via the `.:/app` volume. Rebuild (`npm run build`) or restart services for TypeScript changes.
 - **TypeScript**: Uses `strict` mode with `noImplicitAny` for type safety.
@@ -198,7 +179,7 @@ Updates are sent only to `confirmed: true` subscribers, using WeatherAPI.com dat
   - `swagger-ui-express`: API documentation
 - **Performance**: The scheduler processes subscribers sequentially. For large subscriber counts, consider batching or a job queue (e.g., Bull).
 
-## Troubleshooting
+## 🧯 Troubleshooting
 
 - **Build Errors**:
   - Run `npm run build` locally to check TypeScript errors.
