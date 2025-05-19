@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/weather
+      - WEATHER_API_KEY=26724267e3834a9ab09175439251805
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_USER=
+      - SMTP_PASS=
+      - EMAIL_FROM=noreply@weatherapi.app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+      - mailhog
+
+  scheduler:
+    build: .
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/weather
+      - WEATHER_API_KEY=26724267e3834a9ab09175439251805
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_USER=
+      - SMTP_PASS=
+      - EMAIL_FROM=noreply@weatherapi.app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+      - mailhog
+    command: sh -c "npm run build && npm run start-scheduler"
+
+  mongo:
+    image: mongo:8.0.8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"  # Web UI
+      - "1025:1025"  # SMTP
+
+volumes:
+  mongo-data:
