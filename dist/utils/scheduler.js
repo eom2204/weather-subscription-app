@@ -8,7 +8,7 @@ const node_cron_1 = __importDefault(require("node-cron"));
 const weatherEmailService_1 = require("../services/weatherEmailService");
 const runScheduler = () => {
     // Hourly updates (every hour, on the hour)
-    node_cron_1.default.schedule('59 * * * * *', async () => {
+    node_cron_1.default.schedule('0 * * * *', async () => {
         console.log('Running hourly weather update task');
         await (0, weatherEmailService_1.sendWeatherUpdatesToSubscribers)('hourly');
     });

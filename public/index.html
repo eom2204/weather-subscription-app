@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -26,17 +25,6 @@
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Cloud animation for hero background */
-    @keyframes drift {
-      0% { transform: translateX(0); }
-      50% { transform: translateX(50px); }
-      100% { transform: translateX(0); }
-    }
-    .cloud {
-      animation: drift 20s infinite linear;
-    }
-  </style>
 </head>
 
 <body class="bg-blue-50 font-sans">
@@ -71,13 +59,13 @@
       </svg>
       <svg class="cloud w-48 h-48 absolute top-40 right-20" viewBox="0 0 100 100">
         <path d="M30 60a15 15 0 0 1 15-15h30a15 15 0 0 1 0 30H45a15 15 0 0 1-15-15z" fill="#BFDBFE" />
-      </svg>
+        season      </svg>
     </div>
     <div class="container mx-auto px-4 text-center relative z-10">
       <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Your Weather</h2>
       <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">Get personalized weather forecasts delivered to your inbox. Choose hourly or daily updates for any city, powered by WeatherAPI.com.</p>
       <!-- Subscription Form -->
-      <form action="/api/subscribe" method="post" class="bg-white p-6 rounded-xl shadow-lg max-w-md mx-auto">
+      <div id="subscription-form" class="bg-white p-6 rounded-xl shadow-lg max-w-md mx-auto">
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
           <input
@@ -112,12 +100,13 @@
           </select>
         </div>
         <button
-                type="submit"
+                id="subscribe-btn"
                 class="w-full bg-gradient-to-r from-blue-500 to-teal-400 text-white py-3 rounded-md hover:from-blue-600 hover:to-teal-500 transition-all duration-300 transform hover:scale-105 font-semibold"
         >
           Subscribe Now
         </button>
-      </form>
+        <p id="form-message" class="mt-4 text-sm text-gray-600 hidden"></p>
+      </div>
     </div>
   </section>
 
@@ -174,5 +163,51 @@
     <p class="text-center text-gray-400 mt-8">© 2025 Weather Subscription. All rights reserved.</p>
   </div>
 </footer>
+
+<script>
+  document.getElementById('subscribe-btn').addEventListener('click', async () => {
+    const email = document.getElementById('email').value;
+    const city = document.getElementById('city').value;
+    const frequency = document.getElementById('frequency').value;
+    const messageEl = document.getElementById('form-message');
+
+    // Reset message
+    messageEl.classList.add('hidden');
+    messageEl.classList.remove('text-green-600', 'text-red-600');
+
+    // Basic validation
+    if (!email || !city) {
+      messageEl.textContent = 'Please fill in all required fields.';
+      messageEl.classList.add('text-red-600');
+      messageEl.classList.remove('hidden');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, city, frequency }),
+      });
+
+      const data = await response.text();
+
+      if (response.ok) {
+        messageEl.textContent = data || 'Subscription request sent! Check your email to confirm.';
+        messageEl.classList.add('text-green-600');
+      } else {
+        messageEl.textContent = data || 'Something went wrong. Please try again.';
+        messageEl.classList.add('text-red-600');
+      }
+    } catch (error) {
+      messageEl.textContent = 'Network error. Please try again later.';
+      messageEl.classList.add('text-red-600');
+    }
+
+    messageEl.classList.remove('hidden');
+  });
+</script>
 </body>
 </html>
